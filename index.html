@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>İBE Sınav Çalışma Stüdyosu — Ders 1–6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Rail Navigation -->
+    <aside class="sidebar" aria-label="Ana menü">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">İBE</div>
+        <div class="brand-text">
+          <div class="brand-title">Sınav Stüdyosu</div>
+          <div class="brand-sub">Ders 1–6 · K. Çağıltay</div>
+        </div>
+      </div>
+
+      <nav class="nav-list" role="tablist" aria-label="Çalışma modları">
+        <button class="nav-item active" data-tab="quiz" role="tab" aria-selected="true">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <span>Test &amp; Deneme</span>
+          <span class="nav-badge" id="nav-quiz-badge">0/60</span>
+        </button>
+
+        <button class="nav-item" data-tab="notes" role="tab" aria-selected="false">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </span>
+          <span>Ders Notları</span>
+          <span class="nav-badge" id="nav-notes-badge">0/6</span>
+        </button>
+
+        <button class="nav-item" data-tab="flashcards" role="tab" aria-selected="false">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </span>
+          <span>Bilgi Kartları</span>
+          <span class="nav-badge" id="nav-fc-badge">0/42</span>
+        </button>
+
+        <button class="nav-item" data-tab="review" role="tab" aria-selected="false">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </span>
+          <span>Hızlı Tekrar</span>
+          <span class="nav-badge">18</span>
+        </button>
+      </nav>
+
+      <!-- Per-Lesson Mastery Panel -->
+      <div class="sidebar-progress">
+        <div class="sidebar-progress-head">
+          <span>Hazırlık Durumu</span>
+          <strong class="mono" id="overall-accuracy">—</strong>
+        </div>
+        <div class="lesson-bars" id="sidebar-lesson-bars"></div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="ghost-btn" id="theme-toggle" title="Koyu / Açık tema değiştir">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span id="theme-label">Gece Modu</span>
+        </button>
+        <button class="ghost-btn danger-hover" id="reset-progress" title="Tüm çalışma geçmişini sıfırla">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          <span>Sıfırla</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-area">
+      <!-- Mobile Header -->
+      <header class="mobile-header">
+        <div class="brand-compact">
+          <span class="brand-mark small">İBE</span>
+          <strong>Sınav Stüdyosu</strong>
+        </div>
+        <div class="mobile-actions">
+          <span class="mono accuracy-pill" id="mobile-accuracy">0/60</span>
+          <button class="icon-btn" id="mobile-theme-toggle" aria-label="Tema değiştir">◐</button>
+        </div>
+      </header>
+
+      <!-- Mobile Tab Bar -->
+      <div class="mobile-tabs" role="tablist">
+        <button class="mobile-tab active" data-tab="quiz">Test</button>
+        <button class="mobile-tab" data-tab="notes">Notlar</button>
+        <button class="mobile-tab" data-tab="flashcards">Kartlar</button>
+        <button class="mobile-tab" data-tab="review">Hızlı Tekrar</button>
+      </div>
+
+      <!-- ==================== TAB 1: QUIZ ENGINE ==================== -->
+      <section class="tab-panel active" id="panel-quiz">
+        <!-- Launcher View -->
+        <div id="quiz-launcher">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">60 Sınav Sorusu · 6 Ders Sunumu</div>
+              <h1>Sınav ve Test Merkezi</h1>
+              <p class="lead">Konu bazlı anında açıklamalı çalış veya süreli 25 soruluk deneme sınavıyla kendini ölç.</p>
+            </div>
+            <div class="quick-stats" id="quiz-quick-stats"></div>
+          </div>
+
+          <!-- Two Primary Mode Cards -->
+          <div class="mode-grid">
+            <div class="card mode-card selected" data-mode="study" id="mode-study">
+              <div class="mode-tag">Önerilen</div>
+              <h3>Çalışma Modu</h3>
+              <p>Her cevaptan sonra doğru şıkkı, gerekçesini ve ilgili slayt numarasını anında gör.</p>
+            </div>
+            <div class="card mode-card" data-mode="exam" id="mode-exam">
+              <div class="mode-tag">Sınav Provası</div>
+              <h3>Deneme Sınavı</h3>
+              <p>25 karışık soru, 25 dakika geri sayım. Sonuçlar ve ders bazlı karne sınav bitince açılır.</p>
+            </div>
+          </div>
+
+          <!-- Configuration Card (Shown in Study Mode) -->
+          <div class="card config-card" id="study-config">
+            <div class="config-block">
+              <div class="config-head">
+                <label class="config-label">Hangi Dersler Dahil Edilsin?</label>
+                <div class="inline-links">
+                  <button class="text-btn" id="select-all-lessons">Tümünü Seç</button>
+                  <button class="text-btn" id="clear-lessons">Temizle</button>
+                </div>
+              </div>
+              <div class="lesson-chips" id="quiz-lesson-chips"></div>
+            </div>
+
+            <div class="config-row">
+              <div class="config-block">
+                <label class="config-label">Soru Havuzu</label>
+                <div class="seg-control" id="pool-selector">
+                  <button class="seg-btn active" data-pool="all">Tümü</button>
+                  <button class="seg-btn" data-pool="unanswered">Çözülmemiş</button>
+                  <button class="seg-btn" data-pool="wrong">Yanlışlarım (<span id="wrong-count-inline">0</span>)</button>
+                  <button class="seg-btn" data-pool="bookmarked">Kaydedilen (<span id="bookmark-count-inline">0</span>)</button>
+                </div>
+              </div>
+
+              <div class="config-block">
+                <label class="config-label">Soru Sayısı</label>
+                <div class="seg-control" id="count-selector">
+                  <button class="seg-btn" data-count="10">10</button>
+                  <button class="seg-btn active" data-count="20">20</button>
+                  <button class="seg-btn" data-count="30">30</button>
+                  <button class="seg-btn" data-count="999">Tümü</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="config-footer">
+              <label class="checkbox-label">
+                <input type="checkbox" id="shuffle-toggle" checked />
+                <span>Soruları ve şıkları karıştır</span>
+              </label>
+              <div class="start-wrap">
+                <span class="muted small" id="matching-questions-info">60 soru uygun</span>
+                <button class="primary-btn" id="start-quiz-btn">Teste Başla →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exam Mode Quick Launch -->
+          <div class="card config-card hidden" id="exam-config">
+            <div class="exam-launch-row">
+              <div>
+                <h3>25 Soruluk Karma Deneme Sınavı</h3>
+                <p class="muted">Tüm 6 dersten dengeli seçilmiş 25 soru · 25 dakika süre · Sınav bitiminde detaylı ders karnesi.</p>
+              </div>
+              <button class="primary-btn" id="start-exam-btn">Denemeyi Başlat →</button>
+            </div>
+          </div>
+
+          <!-- Shortcut Strip -->
+          <div class="shortcuts-bar">
+            <span><strong>Klavye Kısayolları:</strong></span>
+            <span><kbd>A</kbd>–<kbd>D</kbd> veya <kbd>1</kbd>–<kbd>4</kbd> Şık seç</span>
+            <span><kbd>Enter</kbd> / <kbd>→</kbd> Sonraki soru</span>
+            <span><kbd>K</kbd> Soruyu kaydet</span>
+          </div>
+        </div>
+
+        <!-- Active Quiz Runner -->
+        <div id="quiz-runner" class="hidden">
+          <div class="runner-topbar">
+            <button class="ghost-btn" id="exit-quiz-btn">← Teste Dön</button>
+            <div class="runner-meta">
+              <span class="mono" id="runner-counter">1 / 20</span>
+              <span class="timer-pill mono hidden" id="runner-timer">25:00</span>
+            </div>
+            <button class="ghost-btn" id="finish-quiz-early-btn">Testi Bitir</button>
+          </div>
+
+          <div class="progress-track">
+            <div class="progress-fill" id="runner-progress-fill"></div>
+          </div>
+
+          <div class="card question-card">
+            <div class="question-meta-row">
+              <div class="meta-pills">
+                <span class="pill accent" id="q-lesson-pill">Ders 01</span>
+                <span class="pill" id="q-topic-pill">Konu</span>
+                <span class="pill subtle" id="q-diff-pill">Temel</span>
+              </div>
+              <button class="bookmark-btn" id="q-bookmark-btn" title="Soruyu kaydet (K)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                <span>Kaydet</span>
+              </button>
+            </div>
+
+            <h2 class="question-text" id="q-text">Soru metni</h2>
+
+            <div class="options-list" id="q-options" role="radiogroup" aria-label="Şıklar"></div>
+
+            <!-- Immediate Explanation Box (Study Mode) -->
+            <div class="explanation-box hidden" id="q-explanation" aria-live="polite">
+              <div class="explanation-head">
+                <strong id="q-exp-status">Doğru</strong>
+                <span class="mono slide-ref" id="q-slide-ref">Ders 1 · Slayt 8</span>
+              </div>
+              <p id="q-exp-text"></p>
+            </div>
+          </div>
+
+          <div class="runner-nav">
+            <button class="secondary-btn" id="prev-q-btn">← Önceki</button>
+            <div class="q-dots" id="q-dots"></div>
+            <button class="primary-btn" id="next-q-btn">Sonraki →</button>
+          </div>
+        </div>
+
+        <!-- Quiz Results View -->
+        <div id="quiz-results" class="hidden">
+          <div class="card results-hero">
+            <div class="results-score-col">
+              <div class="eyebrow">Test Tamamlandı</div>
+              <div class="big-score mono" id="res-percent">%0</div>
+              <p class="muted" id="res-summary">0 doğru, 0 yanlış, 0 boş</p>
+            </div>
+            <div class="results-actions">
+              <button class="primary-btn" id="retry-wrong-btn">Yanlışları Tekrar Çöz</button>
+              <button class="secondary-btn" id="back-to-launcher-btn">Yeni Test Oluştur</button>
+            </div>
+          </div>
+
+          <div class="card breakdown-card">
+            <h3>Ders Bazlı Başarı Karnesi</h3>
+            <div class="breakdown-list" id="res-breakdown"></div>
+          </div>
+
+          <div class="review-filter-bar">
+            <h3>Soru İncelemesi</h3>
+            <div class="seg-control" id="review-filter">
+              <button class="seg-btn active" data-rfilter="all">Tümü</button>
+              <button class="seg-btn" data-rfilter="wrong">Sadece Yanlış/Boş</button>
+              <button class="seg-btn" data-rfilter="correct">Sadece Doğru</button>
+            </div>
+          </div>
+
+          <div class="review-list" id="res-review-list"></div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 2: STUDY NOTES ==================== -->
+      <section class="tab-panel" id="panel-notes">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Ders 1–6 · Tüm Sunumların Sentezi</div>
+            <h1>Sınav Çalışma Notları</h1>
+            <p class="lead">320 slayttan süzülmüş net tanımlar, karşılaştırma tabloları ve sınavda öne çıkan noktalar.</p>
+          </div>
+          <div class="search-wrap">
+            <input type="search" id="notes-search" placeholder="Ara: Suchman, 7±2, GOMS, ISO..." aria-label="Notlarda ara" />
+          </div>
+        </div>
+
+        <div class="lesson-tabs" id="notes-lesson-tabs"></div>
+
+        <div id="notes-content"></div>
+      </section>
+
+      <!-- ==================== TAB 3: FLASHCARDS ==================== -->
+      <section class="tab-panel" id="panel-flashcards">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Aktif Hatırlama · 42 Bilgi Kartı</div>
+            <h1>Bilgi Kartları (Flashcards)</h1>
+            <p class="lead">Kartı çevir, bildiklerini işaretle, zorlandıklarını tekrar et. <kbd>Boşluk</kbd> çevirir, <kbd>1</kbd> tekrar, <kbd>2</kbd> biliyorum.</p>
+          </div>
+          <div class="fc-controls-top">
+            <select id="fc-lesson-filter" aria-label="Ders filtresi">
+              <option value="all">Tüm Dersler (42 Kart)</option>
+              <option value="review">Sadece Tekrar Edilecekler</option>
+              <option value="1">Ders 01 — İBE Giriş</option>
+              <option value="2">Ders 02 — Teoriler &amp; Arayüz</option>
+              <option value="3">Ders 03 — Norman &amp; Körfezler</option>
+              <option value="4">Ders 04 — Psikoloji 1</option>
+              <option value="5">Ders 05 — Psikoloji 2</option>
+              <option value="6">Ders 06 — Kullanılabilirlik</option>
+            </select>
+            <button class="secondary-btn" id="fc-shuffle-btn">Karıştır</button>
+          </div>
+        </div>
+
+        <div class="fc-stage" id="fc-stage">
+          <div class="fc-meta-bar">
+            <span class="pill accent" id="fc-lesson-badge">Ders 01</span>
+            <span class="mono" id="fc-counter">1 / 42</span>
+            <span class="pill subtle" id="fc-status-pill">Yeni</span>
+          </div>
+
+          <div class="flashcard-wrap" id="flashcard-wrap" tabindex="0" role="button" aria-label="Kartı çevir">
+            <div class="flashcard-inner" id="flashcard-inner">
+              <div class="flashcard-face flashcard-front">
+                <span class="face-label">SORU / KAVRAM</span>
+                <p id="fc-front-text"></p>
+                <span class="flip-hint">Cevabı görmek için tıkla veya Boşluk tuşuna bas</span>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <span class="face-label">CEVAP</span>
+                <p id="fc-back-text"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fc-action-row">
+            <button class="secondary-btn" id="fc-prev-btn">← Önceki</button>
+            <div class="fc-rate-group">
+              <button class="rate-btn needs-review" id="fc-again-btn">Tekrar Et (1)</button>
+              <button class="rate-btn known" id="fc-know-btn">Biliyorum (2)</button>
+            </div>
+            <button class="secondary-btn" id="fc-next-btn">Sonraki →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 4: QUICK REVIEW & MATCHING ==================== -->
+      <section class="tab-panel" id="panel-review">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Son Gece Hızlı Tekrar</div>
+            <h1>Eşleştirme Oyunu &amp; Kritik Sayılar</h1>
+            <p class="lead">Sınavda en çok karıştırılan araştırmacı-kavram ikililerini 30 saniyede pekiştir.</p>
+          </div>
+        </div>
+
+        <!-- Interactive Matching Game -->
+        <div class="card match-card">
+          <div class="match-header">
+            <div>
+              <h3>Araştırmacı ↔ Katkı Eşleştirme</h3>
+              <p class="muted small">Soldan bir isim, sağdan karşılık gelen katkısını seç. Her turda 6 çift gelir.</p>
+            </div>
+            <div class="match-stats">
+              <span class="mono" id="match-score">0 / 6</span>
+              <span class="mono muted" id="match-mistakes">Hata: 0</span>
+              <button class="secondary-btn" id="match-new-round">Yeni Tur</button>
+            </div>
+          </div>
+
+          <div class="match-board" id="match-board">
+            <div class="match-col" id="match-left"></div>
+            <div class="match-col" id="match-right"></div>
+          </div>
+          <div class="match-banner hidden" id="match-banner"></div>
+        </div>
+
+        <!-- Critical Numbers Cheat Sheet -->
+        <div class="section-spacer">
+          <h2 class="section-title">Sınavda Çıkabilecek Kritik Sayılar ve Oranlar</h2>
+          <div class="numbers-grid" id="cheat-numbers-grid"></div>
+        </div>
+
+        <!-- Researchers Directory -->
+        <div class="section-spacer">
+          <h2 class="section-title">Tüm Araştırmacılar ve Temel Katkıları (18 Kayıt)</h2>
+          <div class="card table-card">
+            <table class="editorial-table">
+              <thead>
+                <tr>
+                  <th>Araştırmacı / Kurum</th>
+                  <th>Temel Katkı / Sınav Anahtarı</th>
+                </tr>
+              </thead>
+              <tbody id="people-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
