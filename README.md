@@ -54,3 +54,8 @@ Herhangi bir kurulum veya bağımlılık gerektirmez. `index.html` dosyasını t
 python -m http.server 8000
 ```
 Ardından tarayıcınızdan `http://localhost:8000` adresine gidebilirsiniz.
+
+---
+
+**Made By Arda Utancak**
+
